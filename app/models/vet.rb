@@ -15,6 +15,8 @@ class Vet < ApplicationRecord
 
   before_validation :normalize_email
 
+  belongs_to :user, optional: true
+
   private
 
   def normalize_email

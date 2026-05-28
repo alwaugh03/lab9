@@ -1,7 +1,7 @@
 # Remove existing users to avoid duplicate email errors when running db:seed multiple times
 User.destroy_all
 
-User.create!(
+Admin_user =User.create!(
   first_name: "Admin",
   last_name: "User",
   email: "admin@vetclinic.com",
@@ -10,18 +10,18 @@ User.create!(
   role: :admin
 )
 
-User.create!(
-  first_name: "Victor",
-  last_name: "Vet",
+Vet_user =User.create!(
+  first_name: "Vet",
+  last_name: "User",
   email: "vet@vetclinic.com",
   password: "password123",
   password_confirmation: "password123",
   role: :vet
 )
 
-User.create!(
-  first_name: "Olivia",
-  last_name: "Owner",
+Owner_user = User.create!(
+  first_name: "Owner",
+  last_name: "User",
   email: "owner@vetclinic.com",
   password: "password123",
   password_confirmation: "password123",
@@ -30,7 +30,8 @@ User.create!(
 
 owner1 = Owner.create!(
   first_name: "Juan", last_name: "Perez",
-  email: "juan@test.com", phone: "123", address: "Calle 1"
+  email: "juan@test.com", phone: "123", address: "Calle 1",
+  user: owner_user
 )
 
 owner2 = Owner.create!(
@@ -72,7 +73,8 @@ pet5 = owner2.pets.create!(
 # Vets
 vet1 = Vet.create!(
   first_name: "Ana", last_name: "Martinez",
-  email: "ana@vet.com", phone: "111", specialization: "General"
+  email: "ana@vet.com", phone: "111", specialization: "General",
+  user: vet_user
 )
 
 vet2 = Vet.create!(
@@ -108,7 +110,7 @@ appt5 = Appointment.create!(pet: pet5, vet: vet1, date: Time.now, reason: "Skin 
 
 # Treatments
 Treatment.create!(
-  appointment: appt2,
+  appointment: appt1,
   name: "Vaccine",
   medication: "Rabies",
   dosage: "1 dose",
