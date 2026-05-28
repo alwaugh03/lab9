@@ -31,7 +31,7 @@ Owner_user = User.create!(
 owner1 = Owner.create!(
   first_name: "Juan", last_name: "Perez",
   email: "juan@test.com", phone: "123", address: "Calle 1",
-  user: owner_user
+  user: Owner_user
 )
 
 owner2 = Owner.create!(
@@ -74,7 +74,7 @@ pet5 = owner2.pets.create!(
 vet1 = Vet.create!(
   first_name: "Ana", last_name: "Martinez",
   email: "ana@vet.com", phone: "111", specialization: "General",
-  user: vet_user
+  user: Vet_user
 )
 
 vet2 = Vet.create!(
