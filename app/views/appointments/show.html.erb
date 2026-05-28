@@ -34,9 +34,13 @@
 
 <h3>Treatments</h3>
 
-<%= link_to "New Treatment",
-    new_appointment_treatment_path(@appointment),
-    class: "btn btn-primary mb-3" %>
+<% new_treatment = Treatment.new(appointment: @appointment) %>
+
+<% if policy(new_treatment).create? %>
+  <%= link_to "New Treatment",
+      new_appointment_treatment_path(@appointment),
+      class: "btn btn-primary mb-3" %>
+<% end %>
 
 <table class="table table-striped">
   <thead>
@@ -61,15 +65,19 @@
         </td>
 
         <td>
-          <%= link_to "Edit",
-              edit_appointment_treatment_path(@appointment, t),
-              class: "btn btn-sm btn-warning" %>
+          <% if policy(t).update? %>
+            <%= link_to "Edit",
+                edit_appointment_treatment_path(@appointment, t),
+                class: "btn btn-sm btn-warning" %>
+          <% end %>
 
-          <%= button_to "Delete",
-              appointment_treatment_path(@appointment, t),
-              method: :delete,
-              data: { turbo_confirm: "Are you sure?" },
-              class: "btn btn-sm btn-danger" %>
+          <% if policy(t).destroy? %>
+            <%= button_to "Delete",
+                appointment_treatment_path(@appointment, t),
+                method: :delete,
+                data: { turbo_confirm: "Are you sure?" },
+                class: "btn btn-sm btn-danger" %>
+          <% end %>
         </td>
       </tr>
     <% end %>

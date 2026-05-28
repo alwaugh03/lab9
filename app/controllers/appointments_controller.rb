@@ -2,49 +2,75 @@ class AppointmentsController < ApplicationController
   before_action :set_appointment, only: [:show, :edit, :update, :destroy]
 
   def index
-    @appointments = Appointment.includes(:pet, :vet)
+    @appointments = policy_scope(
+      Appointment.includes(:pet, :vet)
+    )
   end
 
   def show
     @appointment = Appointment.includes(
       treatments: :rich_text_clinical_notes
     ).find(params[:id])
+
+    authorize @appointment
   end
+
   def new
     @appointment = Appointment.new
+    authorize @appointment
   end
 
   def create
-    @appointment = Appointment.new(appointment_params)
+    @appointment = Appointment.new(
+      permitted_attributes(Appointment)
+    )
+
+    authorize @appointment
+
+    if current_user.owner?
+      @appointment.pet =
+        current_user.owner.pets.find(params[:pet_id])
+    end
+
     if @appointment.save
-      redirect_to @appointment, notice: "Appointment was successfully created."
+      redirect_to @appointment,
+                  notice: "Appointment created."
     else
-      render :new, status: :unprocessable_entity
+      render :new,
+             status: :unprocessable_entity
     end
   end
 
-  def edit; end
+  def edit
+    authorize @appointment
+  end
 
   def update
-    if @appointment.update(appointment_params)
-      redirect_to @appointment, notice: "Appointment was successfully updated."
+    authorize @appointment
+
+    if @appointment.update(
+      permitted_attributes(@appointment)
+    )
+      redirect_to @appointment,
+                  notice: "Appointment was successfully updated."
     else
-      render :edit, status: :unprocessable_entity
+      render :edit,
+             status: :unprocessable_entity
     end
   end
 
   def destroy
+    authorize @appointment
+
     @appointment.destroy
-    redirect_to appointments_path, notice: "Appointment was successfully deleted."
+
+    redirect_to appointments_path,
+                notice: "Appointment was successfully deleted."
   end
 
   private
 
   def set_appointment
     @appointment = Appointment.find(params[:id])
-  end
-
-  def appointment_params
-    params.require(:appointment).permit(:date, :reason, :status, :pet_id, :vet_id)
   end
 end

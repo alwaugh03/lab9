@@ -38,12 +38,19 @@
           </span>
           </td>
           <td>
-            <%= link_to "Edit", edit_appointment_path(appt), class: "btn btn-sm btn-warning" %>
+            <% if policy(appt).update? %>
+              <%= link_to "Edit",
+                    edit_appointment_path(appt),
+                    class: "btn btn-sm btn-warning" %>
+              <% end %>
 
-            <%= button_to "Delete", appointment_path(appt),
-                  method: :delete,
-                  data: { turbo_confirm: "Are you sure?" },
-                  class: "btn btn-sm btn-danger" %>
+              <% if policy(appt).destroy? %>
+                <%= button_to "Delete",
+                    appointment_path(appt),
+                    method: :delete,
+                    data: { turbo_confirm: "Are you sure?" },
+                    class: "btn btn-sm btn-danger" %>
+              <% end %>
           </td>
         </tr>
       <% end %>

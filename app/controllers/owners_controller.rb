@@ -1,38 +1,56 @@
 class OwnersController < ApplicationController
-  before_action :set_owner, only: [:show, :edit, :update, :destroy]
+  before_action :set_owner,
+                only: [:show, :edit, :update, :destroy]
 
   def index
-    @owners = Owner.all
+    @owners = policy_scope(Owner)
   end
 
-  def show; end
+  def show
+    authorize @owner
+  end
 
   def new
     @owner = Owner.new
+    authorize @owner
   end
 
   def create
     @owner = Owner.new(owner_params)
+    authorize @owner
+
     if @owner.save
-      redirect_to @owner, notice: "Owner was successfully created."
+      redirect_to @owner,
+                  notice: "Owner was successfully created."
     else
-      render :new, status: :unprocessable_entity
+      render :new,
+             status: :unprocessable_entity
     end
   end
 
-  def edit; end
+  def edit
+    authorize @owner
+  end
 
   def update
+    authorize @owner
+
     if @owner.update(owner_params)
-      redirect_to @owner, notice: "Owner was successfully updated."
+      redirect_to @owner,
+                  notice: "Owner was successfully updated."
     else
-      render :edit, status: :unprocessable_entity
+      render :edit,
+             status: :unprocessable_entity
     end
   end
 
   def destroy
+    authorize @owner
+
     @owner.destroy
-    redirect_to owners_path, notice: "Owner was successfully deleted."
+
+    redirect_to owners_path,
+                notice: "Owner was successfully deleted."
   end
 
   private
@@ -42,6 +60,6 @@ class OwnersController < ApplicationController
   end
 
   def owner_params
-    params.require(:owner).permit(:first_name, :last_name, :email, :phone)
+    permitted_attributes(@owner || Owner)
   end
 end

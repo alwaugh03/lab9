@@ -1,7 +1,17 @@
 # Remove existing users to avoid duplicate email errors when running db:seed multiple times
 User.destroy_all
 
-Admin_user =User.create!(
+# Clear database
+Treatment.destroy_all
+Appointment.destroy_all
+Pet.destroy_all
+Vet.destroy_all
+Owner.destroy_all
+User.destroy_all
+
+# Users
+
+admin_user = User.create!(
   first_name: "Admin",
   last_name: "User",
   email: "admin@vetclinic.com",
@@ -10,7 +20,7 @@ Admin_user =User.create!(
   role: :admin
 )
 
-Vet_user =User.create!(
+vet_user_1 = User.create!(
   first_name: "Vet",
   last_name: "User",
   email: "vet@vetclinic.com",
@@ -19,7 +29,16 @@ Vet_user =User.create!(
   role: :vet
 )
 
-Owner_user = User.create!(
+vet_user_2 = User.create!(
+  first_name: "Second",
+  last_name: "Vet",
+  email: "vet2@vetclinic.com",
+  password: "password123",
+  password_confirmation: "password123",
+  role: :vet
+)
+
+owner_user_1 = User.create!(
   first_name: "Owner",
   last_name: "User",
   email: "owner@vetclinic.com",
@@ -28,20 +47,39 @@ Owner_user = User.create!(
   role: :owner
 )
 
+owner_user_2 = User.create!(
+  first_name: "Maria",
+  last_name: "Owner",
+  email: "owner2@vetclinic.com",
+  password: "password123",
+  password_confirmation: "password123",
+  role: :owner
+)
+
 owner1 = Owner.create!(
-  first_name: "Juan", last_name: "Perez",
-  email: "juan@test.com", phone: "123", address: "Calle 1",
-  user: Owner_user
+  first_name: "Juan",
+  last_name: "Perez",
+  email: "juan@test.com",
+  phone: "123",
+  address: "Calle 1",
+  user: owner_user_1
 )
 
 owner2 = Owner.create!(
-  first_name: "Maria", last_name: "Lopez",
-  email: "maria@test.com", phone: "456", address: "Calle 2"
+  first_name: "Maria",
+  last_name: "Lopez",
+  email: "maria@test.com",
+  phone: "456",
+  address: "Calle 2",
+  user: owner_user_2
 )
 
 owner3 = Owner.create!(
-  first_name: "Pedro", last_name: "Gomez",
-  email: "pedro@test.com", phone: "789", address: "Calle 3"
+  first_name: "Pedro",
+  last_name: "Gomez",
+  email: "pedro@test.com",
+  phone: "789",
+  address: "Calle 3"
 )
 
 # Pets 
@@ -72,15 +110,23 @@ pet5 = owner2.pets.create!(
 
 # Vets
 vet1 = Vet.create!(
-  first_name: "Ana", last_name: "Martinez",
-  email: "ana@vet.com", phone: "111", specialization: "General",
-  user: Vet_user
+  first_name: "Ana",
+  last_name: "Martinez",
+  email: "ana@vet.com",
+  phone: "111",
+  specialization: "General",
+  user: vet_user_1
 )
 
 vet2 = Vet.create!(
-  first_name: "Luis", last_name: "Rojas",
-  email: "luis@vet.com", phone: "222", specialization: "Surgery"
+  first_name: "Luis",
+  last_name: "Rojas",
+  email: "luis@vet.com",
+  phone: "222",
+  specialization: "Surgery",
+  user: vet_user_2
 )
+
 
 # Attach photos
 pet1.photo.attach(
@@ -102,11 +148,11 @@ pet3.photo.attach(
 )
 
 # Appointments
-appt1 = Appointment.create!(pet: pet1, vet: vet1, date: Time.now, reason: "Checkup", status: :scheduled)
-appt2 = Appointment.create!(pet: pet2, vet: vet1, date: Time.now, reason: "Vaccination", status: :completed)
+appt1 = Appointment.create!(pet: pet1, vet: vet1, date: Time.now+1.hour, reason: "Checkup", status: :scheduled)
+appt2 = Appointment.create!(pet: pet2, vet: vet1, date: Time.now-1.hour, reason: "Vaccination", status: :completed)
 appt3 = Appointment.create!(pet: pet3, vet: vet2, date: Time.now, reason: "Injury", status: :in_progress)
-appt4 = Appointment.create!(pet: pet4, vet: vet2, date: Time.now, reason: "Surgery", status: :completed)
-appt5 = Appointment.create!(pet: pet5, vet: vet1, date: Time.now, reason: "Skin issue", status: :cancelled)
+appt4 = Appointment.create!(pet: pet4, vet: vet2, date: Time.now-2.hour, reason: "Surgery", status: :completed)
+appt5 = Appointment.create!(pet: pet5, vet: vet1, date: Time.now-1.hour, reason: "Skin issue", status: :cancelled)
 
 # Treatments
 Treatment.create!(
