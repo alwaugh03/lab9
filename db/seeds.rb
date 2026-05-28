@@ -21,7 +21,7 @@ admin_user = User.create!(
 )
 
 vet_user_1 = User.create!(
-  first_name: "Vet",
+  first_name: "Vet", 
   last_name: "User",
   email: "vet@vetclinic.com",
   password: "password123",
